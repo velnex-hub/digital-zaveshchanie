@@ -1,37 +1,38 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Когда меня не станет</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Цифровое завещание</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Когда меня не станет</h1>
-    <p>Дигитальное завещание — сохраните важное на случай, если вас не станет.</p>
-    <form>
-      <label>Текст завещания (обязательно):</label><br/>
-      <textarea rows="5" required placeholder="Напишите здесь текст завещания..."></textarea><br/>
-      
-      <label>Напутственный текст (по желанию):</label><br/>
-      <textarea rows="3" placeholder="Ваши последние слова..."></textarea><br/>
-      
-      <label>Важные файлы (по желанию):</label><br/>
-      <input type="file" multiple /><br/>
-      
-      <label>Пароли и секреты (по желанию):</label><br/>
-      <textarea rows="3" placeholder="Пароли, ключи..."></textarea><br/>
-      
-      <label>Email наследника:</label><br/>
-      <input type="email" required placeholder="email@example.com" /><br/>
-      
-      <label>Таймер срабатывания (в днях):</label><br/>
-      <input type="number" min="1" max="30" value="14" /><br/>
-      
-      <button type="submit">Сохранить завещание</button>
-    </form>
-  </div>
+  <h1>Оставь свое цифровое завещание</h1>
+  <form id="willForm">
+    <input type="text" name="full_name" placeholder="Ваше имя" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <textarea name="message" placeholder="Текст завещания" required></textarea>
+    <textarea name="note" placeholder="Напутственный текст (по желанию)"></textarea>
+    <button type="submit">Отправить</button>
+  </form>
+
+  <script type="module">
+    import { submitWill } from './supabaseClient.js';
+
+    const form = document.getElementById('willForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      const { data: res, error } = await submitWill(data);
+
+      if (error) {
+        alert('Ошибка отправки: ' + error.message);
+      } else {
+        alert('Данные успешно отправлены!');
+        form.reset();
+      }
+    });
+  </script>
 </body>
 </html>
